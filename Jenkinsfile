@@ -22,7 +22,11 @@ pipeline {
         stage("deploy") {
             steps {
                 script {
-                    echo "Deploying the application..."
+                sshagent(['kelz-aws-ssh']) {
+                    def dockerCmd = 'docker run -p 3000:3080 -d kelz107/nana-projects:react-node-aws'
+                    sh "ssh -o StrictHostKeyChecking=no ec2-user@15.223.230.218 ${dockerCmd}"
+                    
+                }
                 }
             }
         }               
