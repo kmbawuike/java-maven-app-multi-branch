@@ -1,16 +1,11 @@
 #!/usr/bin/env groovy
 
-library identifier: 'jenkins-shared-library@main', retriever: modernSCM(
-    [$class: 'GitSCMSource',
-    remote: 'https://github.com/kmbawuike/java-jenkins-shared-library.git',
-    credentialsID: 'kelz-github'
-    ]
-)
+@Library('jenkins-shared-library')_
 
 pipeline {
     agent any
     tools {
-        maven 'Maven'
+        maven 'maven'
     }
     environment {
         IMAGE_NAME = 'kelz107/nana-projects:2.0'
