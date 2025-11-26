@@ -1,7 +1,5 @@
 #!/usr/bin/env groovy
 
-@Library('jenkins-shared-library')_
-
 pipeline {
     agent any
     tools {
@@ -14,16 +12,18 @@ pipeline {
         stage('build app') {
             steps {
                 echo 'building application jar...'
-                buildJar()
+                sh 'mvn package'
             }
         }
         stage('build image') {
             steps {
                 script {
                     echo 'building the docker image...'
-                    buildImage(env.IMAGE_NAME)
-                    dockerLogin()
-                    dockerPush(env.IMAGE_NAME)
+                    sh "docker build -t $env.IMAGE_NAME ."
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-id', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                    sh "echo '${PASS}' | docker login -u '${USER}' --password-stdin"
+                    }
+                    "docker push $env.IMAGE_NAME"
                 }
             }
         } 
@@ -33,7 +33,7 @@ pipeline {
                     echo 'deploying docker image to EC2...'
                     def dockerCmd = "docker run -p 3000:3080 -d ${IMAGE_NAME}"
                     sshagent(['kelz-aws-ssh']) {
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@15.223.230.218 ${dockerCmd}"
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@15.222.241.179 ${dockerCmd}"
                     }
                 }
             }               
