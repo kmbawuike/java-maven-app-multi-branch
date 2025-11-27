@@ -13,7 +13,7 @@ pipeline {
         maven 'maven'
     }
     environment {
-        IMAGE_NAME = 'kelz107/nana-projects:3.0'
+        IMAGE_NAME = 'kelz107/nana-projects:4.0'
     }
     stages {
         stage('build app') {
@@ -36,11 +36,11 @@ pipeline {
             steps {
                 script {
                     echo 'deploying docker image to EC2...'
-                    def dockerComposeCmd = "docker-compose -f docker-compose.yaml up --detach"
+                    def shellCmd = "bash ./server-cmds.sh ${IMAGE_NAME}"
                     sshagent(['aws-ec2-ssh']) {
                         sh "ssh-keyscan -H 15.223.209.219 >> ~/.ssh/known_hosts"
                         sh "scp docker-compose.yaml ec2-user@15.223.209.219:/home/ec2-user"
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@15.223.209.219 ${dockerComposeCmd}"
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@15.223.209.219 ${shellCmd}"
                     }
                 }
             }               

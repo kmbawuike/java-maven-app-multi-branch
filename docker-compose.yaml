@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   java-maven-app:
-    image: kelz107/nana-projects:3.0
+    image: ${env.IMAGE_NAME}
     ports:
       - 8080:8080
     
