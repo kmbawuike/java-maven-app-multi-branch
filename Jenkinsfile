@@ -38,7 +38,7 @@ pipeline {
                     echo 'deploying docker image to EC2...'
                     sshagent(['aws-ec2-ssh']) {
                         sh """ 
-                        ssh-keyscan -H 15.223.209.219 >> ~/.ssh/known_hosts"
+                        ssh-keyscan -H 15.223.209.219 >> ~/.ssh/known_hosts
                         scp docker-compose.yaml ec2-user@15.223.209.219:/home/ec2-user
                         ssh -o StrictHostKeyChecking=no ec2-user@15.223.209.219
                         export IMAGE_NAME=${IMAGE_NAME}
