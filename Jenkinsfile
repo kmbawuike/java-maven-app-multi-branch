@@ -12,7 +12,7 @@ pipeline {
     tools {
         maven 'maven'
     }
-    
+
     stages {
         stage('increment version') {
             steps {
@@ -61,5 +61,18 @@ pipeline {
                 }
             }               
         }
+
+        stage("commit version update") {
+            steps {
+                script {
+                    sshagent(['aws-ec2-ssh']) {
+                        sh 'git remote set-url origin git@github.com:kmbawuike/java-maven-app-multi-branch.git'
+                        sh 'git add .'
+                        sh 'git commit -m "ci: version bump"'
+                        sh 'git push origin HEAD:jenkins-jobs'
+                    }
+                }
+            }               
+        } 
     }
 }
