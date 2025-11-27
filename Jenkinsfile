@@ -66,8 +66,9 @@ pipeline {
             steps {
                 script {
                     sshagent(['git-ssh']) {
-                        sh 'git config --global user.email jenkins@gmail.com'
                         sh 'git remote set-url origin git@github.com:kmbawuike/java-maven-app-multi-branch.git'
+                        sh 'git config --global user.email "jenkins222@gmail.com"'
+                        sh 'git config --global user.name "jenkins"'
                         sh 'git add .'
                         sh 'git commit -m "ci: version bump"'
                         sh 'git push origin HEAD:main'
