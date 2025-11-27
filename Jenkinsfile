@@ -32,16 +32,16 @@ pipeline {
                 }
             }
         } 
-        // stage("deploy") {
-        //     steps {
-        //         script {
-        //             echo 'deploying docker image to EC2...'
-        //             def dockerCmd = "docker run -p 3000:3080 -d ${IMAGE_NAME}"
-        //             sshagent(['kelz-aws-ssh']) {
-        //                 sh "ssh -o StrictHostKeyChecking=no ec2-user@15.223.230.218 ${dockerCmd}"
-        //             }
-        //         }
-        //     }               
-        // }
+        stage("deploy") {
+            steps {
+                script {
+                    echo 'deploying docker image to EC2...'
+                    def dockerCmd = "docker run -p 3000:3080 -d ${IMAGE_NAME}"
+                    sshagent(['aws-ec2-ssh']) {
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@15.222.241.179 ${dockerCmd}"
+                    }
+                }
+            }               
+        }
     }
 }
