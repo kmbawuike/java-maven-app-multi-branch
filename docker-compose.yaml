@@ -3,7 +3,7 @@ services:
   java-maven-app:
     image: kelz107/nana-projects:3.0
     ports:
-      - 8080:80
+      - 8080:8080
     
   postgres:
     image: postgres:15
