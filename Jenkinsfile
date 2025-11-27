@@ -13,7 +13,7 @@ pipeline {
         maven 'maven'
     }
     environment {
-        IMAGE_NAME = 'kelz107/nana-projects:2.0'
+        IMAGE_NAME = 'kelz107/nana-projects:3.0'
     }
     stages {
         stage('build app') {
