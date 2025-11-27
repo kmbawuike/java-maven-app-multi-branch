@@ -39,6 +39,7 @@ pipeline {
                     def shellCmd = "docker-compose -f docker-compose.yaml up --detach"
                     sshagent(['aws-ec2-ssh']) {
                         sh "export IMAGE_NAME=${IMAGE_NAME}"
+                        sh 'echo $IMAGE_NAME'
                         sh "ssh-keyscan -H 15.223.209.219 >> ~/.ssh/known_hosts"
                         sh "scp docker-compose.yaml ec2-user@15.223.209.219:/home/ec2-user"
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@15.223.209.219 ${shellCmd}"
