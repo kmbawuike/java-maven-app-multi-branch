@@ -65,7 +65,7 @@ pipeline {
         stage("commit version update") {
             steps {
                 script {
-                    sshagent(['aws-ec2-ssh']) {
+                    sshagent(['git-ssh']) {
                         sh 'git remote set-url origin git@github.com:kmbawuike/java-maven-app-multi-branch.git'
                         sh 'git add .'
                         sh 'git commit -m "ci: version bump"'
