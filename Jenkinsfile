@@ -12,10 +12,22 @@ pipeline {
     tools {
         maven 'maven'
     }
-    environment {
-        IMAGE_NAME = 'kelz107/nana-projects:4.0'
-    }
+    
     stages {
+        stage('increment version') {
+            steps {
+                script {
+                    echo 'incrementing app version...'
+                    sh 'mvn build-helper:parse-version versions:set \
+                        -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
+                        versions:commit'
+                    def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
+                    def version = matcher[0][1]
+                    env.IMAGE_NAME = "kelz107/nana-projects${version}-${BUILD_NUMBER}"
+                }
+            }
+        }
+
         stage('build app') {
             steps {
                 echo 'building application jar...'
@@ -38,7 +50,7 @@ pipeline {
                     echo 'deploying docker image to EC2...'
                     echo 'deploying docker image to EC2...'
 
-                    def shellCmd = "bash ./server-cmds.sh ${IMAGE_NAME}"
+                    def shellCmd = "bash ./server-cmds.sh ${env.IMAGE_NAME}"
                     def ec2Instance = "ec2-user@15.223.209.219"
 
                     sshagent(['aws-ec2-ssh']) {
