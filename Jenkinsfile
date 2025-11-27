@@ -36,11 +36,14 @@ pipeline {
             steps {
                 script {
                     echo 'deploying docker image to EC2...'
-                    def shellCmd = "export IMAGE_NAME=${IMAGE_NAME} && docker-compose -f docker-compose.yaml up --detach"
                     sshagent(['aws-ec2-ssh']) {
-                        sh "ssh-keyscan -H 15.223.209.219 >> ~/.ssh/known_hosts"
-                        sh "scp docker-compose.yaml ec2-user@15.223.209.219:/home/ec2-user"
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@15.223.209.219 ${shellCmd}"
+                        sh """ 
+                        ssh-keyscan -H 15.223.209.219 >> ~/.ssh/known_hosts"
+                        scp docker-compose.yaml ec2-user@15.223.209.219:/home/ec2-user
+                        ssh -o StrictHostKeyChecking=no ec2-user@15.223.209.219 ${shellCmd}
+                        export IMAGE_NAME=${IMAGE_NAME}
+                        docker-compose -f docker-compose.yaml up --detach
+                        """
                     }
                 }
             }               
